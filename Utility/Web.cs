@@ -60,21 +60,7 @@ namespace Utility
 
         public string MakeRequest()
         {
-            string result = "";
-            //for(int i=0; i<3; i++)
-            {
-                try
-                {
-                    result = MakeRequest("");
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine(DateTime.Now + ":\t" + e.Message);
-                    Thread.Sleep(30 * 1000);
-                }
-
-            }
+            string result = MakeRequest("");
             return result;
         }
 

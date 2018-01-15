@@ -90,7 +90,7 @@ namespace FeedTool
                     catch (Exception)
                     {
                         Console.WriteLine("格式错误,请修改后按回车键继续:");
-                        Console.WriteLine("第 【{0}】行: {1}", lineNum, line);
+                        Console.WriteLine("第【{0}】行: {1}", lineNum, line);
                         Console.ReadKey();
                         continue;
                     }

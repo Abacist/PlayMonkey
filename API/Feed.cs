@@ -33,20 +33,16 @@ namespace API
             this.feedPeachURL = ConfigurationManager.AppSettings["feedPeachURL"];
         }
 
-        public int FeedWKC(int id, double wkc)
+        public bool FeedWKC(int id, double wkc)
         {
             var body = string.Format("coin={0}&monkeyId={1}", wkc, id);
-            Post(this.feedWKCURL, body);
-
-            return 0;
+            return Post(this.feedWKCURL, body);
         }
 
-        public int FeedPeach(int id, int count)
+        public bool FeedPeach(int id, int count)
         {
             var body = string.Format("num={0}&monkeyId={1}", count, id);
-            Post(this.feedPeachURL, body);
-
-            return 0;
+            return Post(this.feedPeachURL, body);
         }
 
         private void UpdateToken()
@@ -54,9 +50,11 @@ namespace API
             int? code;
             do
             {
+                Thread.Sleep(1000);
                 this.token = Login.TryLogin(userName, password, out code);
                 if (code != 200)
                 {
+                    Console.WriteLine();
                     Console.WriteLine("登陆失败,服务器返回消息: 【{0}】\n请输入正确的账号密码,原账号密码: {1}  {2}", this.token ?? "无", userName, password);
                     Console.Write("账号:");
                     userName = Console.ReadLine();
@@ -67,7 +65,7 @@ namespace API
             while (code != 200);
         }
 
-        private void Post(string url, string body)
+        private bool Post(string url, string body)
         {
             do
             {
@@ -103,10 +101,11 @@ namespace API
                 }
                 else if (jsonData.code == 200)
                 {
-                    break;
+                    return true;
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("请求失败,服务器返回消息: 【{0}】", jsonData.msg);
                     string input;
                     do
@@ -122,7 +121,7 @@ namespace API
                     }
                     else
                     {
-                        break;
+                        return false;
                     }
                 }
             }
