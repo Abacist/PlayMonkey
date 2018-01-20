@@ -31,7 +31,7 @@ namespace FeedTool
 
                 foreach (var feedInfo in info.Item2)
                 {
-                    Console.Write("正在喂食 {0} 号猴子 {1}\t个 ", feedInfo.MonkeyId, feedInfo.Amount);
+                    Console.Write("正在喂食 {0} 号猴子 {1} 个 ", feedInfo.MonkeyId, feedInfo.Amount);
                     bool success = false;
                     switch (feedInfo.FeedType)
                     {
