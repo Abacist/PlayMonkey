@@ -101,7 +101,7 @@ namespace FeedTool
 
                 foreach (var feedInfo in info.Item2)
                 {
-                    Console.Write("正在喂食 {0} {1} 号猴子 {2} 个 ", authInfo.ServerFullName, feedInfo.MonkeyId, feedInfo.Amount);
+                    Console.Write("正在喂食   {0}\t{1} 号猴子 {2} 个 ", authInfo.ServerFullName, feedInfo.MonkeyId, feedInfo.Amount);
                     bool success = false;
                     switch (feedInfo.FeedType)
                     {
