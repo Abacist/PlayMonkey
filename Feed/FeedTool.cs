@@ -22,7 +22,7 @@ namespace FeedTool
                     if (next.Extension.Equals(".txt", StringComparison.OrdinalIgnoreCase))
                     {
                         var valid = true;
-                        foreach (var c in next.Name)
+                        foreach (var c in next.Name.Substring(0, next.Name.LastIndexOf(".txt", StringComparison.OrdinalIgnoreCase)))
                         {
                             if (!char.IsLetterOrDigit(c))
                             {
@@ -50,20 +50,19 @@ namespace FeedTool
 
             foreach (var fileName in validFileNames)
             {
-                Console.WriteLine("正在从 {0} 中读取喂食信息...\t");
                 var feedInfo = TransationReader.Read(fileName);
                 if (feedInfo != null)
                 {
-                    Console.WriteLine("完成");
-                    allFeedInfo.AddRange(allFeedInfo);
+                    Console.WriteLine("喂食文件 {0} 读取成功", fileName);
+                    allFeedInfo.AddRange(feedInfo);
                 }
             }
 
+            Console.Write("信息读取完毕,按回车键开始自动喂猴");
+            Console.ReadLine();
+
             //TODO: list all feed info
             Work(allFeedInfo);
-
-            Console.WriteLine("信息读取完毕,按回车键开始自动喂猴");
-            Console.ReadLine();
 
             Console.WriteLine();
             Console.WriteLine("全部完成!");
@@ -81,8 +80,8 @@ namespace FeedTool
             var assembly = Assembly.GetExecutingAssembly();
             var imageStream = assembly.GetManifestResourceStream("FeedTool.Sponsor.bmp");
             var image = new Bitmap(imageStream);
-            image.Save(@"..\Sponsor.bmp");
-            Process.Start(@"..\Sponsor.bmp");
+            image.Save(@"..\赞助作者.bmp");
+            Process.Start(@"..\赞助作者.bmp");
         }
 
         static void Work(List<Tuple<AuthInfo, List<FeedInfo>>> allInfo)
@@ -102,7 +101,7 @@ namespace FeedTool
 
                 foreach (var feedInfo in info.Item2)
                 {
-                    Console.Write("正在喂食服务器 {0}\t{1} 号猴子 {2} 个 ", authInfo.Server, feedInfo.MonkeyId, feedInfo.Amount);
+                    Console.Write("正在喂食 {0} {1} 号猴子 {2} 个 ", authInfo.ServerFullName, feedInfo.MonkeyId, feedInfo.Amount);
                     bool success = false;
                     switch (feedInfo.FeedType)
                     {

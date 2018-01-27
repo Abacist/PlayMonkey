@@ -29,7 +29,8 @@ namespace FeedTool
             {
                 using (var fs = new StreamReader(fileName))
                 {
-                    var server = fileName.Substring(0, fileName.LastIndexOf('.'));
+                    var shortName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+                    var server = shortName.Substring(0, shortName.LastIndexOf('.')).ToLower();
                     var line = string.Empty;
                     var lineNum = 0;
                     Tuple<AuthInfo, List<FeedInfo>> curInfoTuple = null;
@@ -40,7 +41,7 @@ namespace FeedTool
                         while ((line = fs.ReadLine()) != null)
                         {
                             lineNum++;
-                            if (line.Length == 0 || line[0] == '#')
+                            if (line.Length == 0 || line[0] == '#' || line[0] == '_')
                             {
                                 continue;
                             }
@@ -91,6 +92,7 @@ namespace FeedTool
                     }
                     catch (Exception)
                     {
+                        fs.Close();
                         Console.WriteLine("喂食文件 {0} 格式错误,请修改:", fileName);
                         Console.WriteLine("第【{0}】行: {1}", lineNum, line);
                         string input;
