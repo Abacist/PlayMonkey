@@ -10,27 +10,29 @@ namespace API
     {
         private string userName;
         private string password;
+        private string server;
         private string token;
         private string feedWKCURL;
         private string feedPeachURL;
 
-        public Feed(string userName, string password)
+        public Feed(string server, string userName, string password)
         {
             this.userName = userName;
             this.password = password;
+            this.server = server;
 
-            this.feedWKCURL = ConfigurationManager.AppSettings["feedWKCURL"];
-            this.feedPeachURL = ConfigurationManager.AppSettings["feedPeachURL"];
+            this.feedWKCURL = string.Format(ConfigurationManager.AppSettings["feedWKCURL"], server);
+            this.feedPeachURL = string.Format(ConfigurationManager.AppSettings["feedPeachURL"], server);
 
             this.UpdateToken();
         }
 
-        public Feed(string token)
+        public Feed(string server, string token)
         {
             this.token = token;
 
-            this.feedWKCURL = ConfigurationManager.AppSettings["feedWKCURL"];
-            this.feedPeachURL = ConfigurationManager.AppSettings["feedPeachURL"];
+            this.feedWKCURL = string.Format(ConfigurationManager.AppSettings["feedWKCURL"], server);
+            this.feedPeachURL = string.Format(ConfigurationManager.AppSettings["feedPeachURL"], server);
         }
 
         public bool FeedWKC(int id, double wkc)
@@ -51,7 +53,7 @@ namespace API
             do
             {
                 Thread.Sleep(1000);
-                this.token = Login.TryLogin(userName, password, out code);
+                this.token = Login.TryLogin(server, userName, password, out code);
                 if (code != 200)
                 {
                     Console.WriteLine();

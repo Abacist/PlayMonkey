@@ -7,11 +7,11 @@ namespace API
 {
     public class Login
     {
-        public static string TryLogin(string name, string password, out int? code)
+        public static string TryLogin(string server, string name, string password, out int? code)
         {
             do
             {
-                var loginURL = ConfigurationManager.AppSettings["loginURL"];
+                var loginURL = string.Format(ConfigurationManager.AppSettings["loginURL"], server);
                 //TODO: Fake headers
                 var client = new RestClient(loginURL, HttpVerb.POST, string.Format("phone={0}&pwd={1}", name, password));
                 client.ContentType = "application/x-www-form-urlencoded";

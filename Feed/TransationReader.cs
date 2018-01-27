@@ -20,7 +20,7 @@ namespace FeedTool
                 else
                 {
                     Console.WriteLine("文件 【{0}】 不存在,请检查后按回车键继续", fileName);
-                    Console.ReadKey();
+                    Console.ReadLine();
                 }
             }
             while (true);
@@ -29,6 +29,7 @@ namespace FeedTool
             {
                 using (var fs = new StreamReader(fileName))
                 {
+                    var server = fileName.Substring(0, fileName.LastIndexOf('.'));
                     var line = string.Empty;
                     var lineNum = 0;
                     Tuple<AuthInfo, List<FeedInfo>> curInfoTuple = null;
@@ -48,6 +49,7 @@ namespace FeedTool
                             if (words[0].Length >= 11) //A phone number or token
                             {
                                 var authInfo = new AuthInfo();
+                                authInfo.Server = server;
                                 if (words[0].Length > 11) //A token
                                 {
                                     authInfo.Token = words[0];
@@ -89,10 +91,24 @@ namespace FeedTool
                     }
                     catch (Exception)
                     {
-                        Console.WriteLine("格式错误,请修改后按回车键继续:");
+                        Console.WriteLine("喂食文件 {0} 格式错误,请修改:", fileName);
                         Console.WriteLine("第【{0}】行: {1}", lineNum, line);
-                        Console.ReadKey();
-                        continue;
+                        string input;
+                        do
+                        {
+                            Console.WriteLine("请修改后按【1】并回车重新读取该文件,或者直接按【2】并回车跳过该文件");
+                            input = Console.ReadLine();
+                        }
+                        while (input != "1" && input != "2");
+
+                        if (input == "1")
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            return null;
+                        }
                     }
                 }
             }
