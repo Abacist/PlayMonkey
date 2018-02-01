@@ -71,60 +71,57 @@ namespace API
         {
             do
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
                 var headers = new Dictionary<string, string>();
                 headers["accessToken"] = this.token;
                 var client = new RestClient(url, HttpVerb.POST, body, headers);
                 client.ContentType = "application/x-www-form-urlencoded";
-                var retry = false;
                 string json = string.Empty;
                 try
                 {
                     json = client.MakeRequest();
-                }
-                catch (Exception)
-                {
-                    retry = true;
-                }
-
-                if (string.IsNullOrEmpty(json) || retry)
-                {
-                    var waitTime = 10;
-                    Console.WriteLine("无法连接服务器,{0} 秒后重试...", waitTime);
-                    Thread.Sleep(waitTime * 1000);
-                    continue;
-                }
-
-                var jsonData = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(json);
-                if (jsonData.code == 401)
-                {
-                    this.UpdateToken();
-                    continue;
-                }
-                else if (jsonData.code == 200)
-                {
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("请求失败,服务器返回消息: 【{0}】", jsonData.msg);
-                    string input;
-                    do
+                    var jsonData = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(json);
+                    if (jsonData.code == 401)
                     {
-                        Console.WriteLine("按【1】并回车以重新请求,按【2】并回车以跳过并执行下一条请求");
-                        input = Console.ReadLine();
-                    }
-                    while (input != "1" && input != "2");
-
-                    if (input == "1")
-                    {
+                        this.UpdateToken();
                         continue;
+                    }
+                    else if (jsonData.code == 200)
+                    {
+                        return true;
                     }
                     else
                     {
-                        return false;
+                        Console.WriteLine();
+                        Console.WriteLine("请求失败,服务器返回消息: 【{0}】", jsonData.msg);
+                        string input;
+                        do
+                        {
+                            Console.WriteLine("按【1】并回车以重新请求,按【2】并回车以跳过并执行下一条请求");
+                            input = Console.ReadLine();
+                        }
+                        while (input != "1" && input != "2");
+
+                        if (input == "1")
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    var waitTime = 10;
+                    Console.WriteLine();
+                    Console.WriteLine("无法连接服务器或数据解析错误,{0} 秒后重试...", waitTime);
+                    Console.WriteLine(e.Message);
+                    Thread.Sleep(waitTime * 1000);
+                    Console.WriteLine("等待中...");
+                    Console.WriteLine("重试中...");
+                    continue;
                 }
             }
             while (true);
