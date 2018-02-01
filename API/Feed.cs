@@ -71,7 +71,7 @@ namespace API
         {
             do
             {
-                Thread.Sleep(2000);
+                Thread.Sleep(3000);
                 var headers = new Dictionary<string, string>();
                 headers["accessToken"] = this.token;
                 var client = new RestClient(url, HttpVerb.POST, body, headers);
@@ -120,7 +120,7 @@ namespace API
                     Console.WriteLine(e.Message);
                     Thread.Sleep(waitTime * 1000);
                     Console.WriteLine("等待中...");
-                    Console.WriteLine("重试中...");
+                    Console.Write("重试中...");
                     continue;
                 }
             }
